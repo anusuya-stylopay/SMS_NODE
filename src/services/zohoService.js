@@ -105,7 +105,19 @@ async function createAgent(req, res,datainfo) {
         //   });
         return response.data;
     } catch (error) {
-        return res.status(error.response ? error.response.status : 500).send(error.message);
+        console.log("Error :",error)
+        console.log("errorContactCreate :",error.response.data.code)
+        if(error.response.data.code=='DOMAIN_TOKEN_MISMATCH'){
+            return res.send({ errorCode: 'NotAuthorized',msg: " :Contact to the admin" })
+        }
+        else if(error.response.data.data[0].code=="DUPLICATE_DATA"){
+            console.log(true)
+            return res.send({ errorCode: 'NotAuthorized',msg: " :Email Id is already exist" })
+        }
+        else{
+            console.log(false)
+            return res.status(error.response ? error.response.status : 500).send(error.message);
+        }
     }
 }
 

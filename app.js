@@ -19,11 +19,11 @@ app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
-// app.use(cors({
-//     origin: ["http://localhost:3001","http://localhost:3000", "https://webapp-dev.edbucket.com"],
-//     methods: ["POST", "GET", "PUT", "DELETE ","OPTIONS"],
-//     credentials: true
-// }));
+app.use(cors({
+    origin: ["http://localhost:4000", "https://webapp-dev.edbucket.com"],
+    methods: ["POST", "GET", "PUT", "DELETE ","OPTIONS"],
+    credentials: true
+}));
 
 // const storage = multer.diskStorage({
 //   destination: function (req, file, cb) {
@@ -52,7 +52,7 @@ app.use(
 // mountRoutes(app);
 // Routes
 app.use('/api/signup', require('./src/routes/signupRoutes'));
-// app.use('/api/token', require('./src/routes/tokenRoutes'));
+app.use('/api/login',  require('./src/routes/loginRoutes'));
 
 app.get("/", (req, res) => {
   res.send("Hello World!");
