@@ -48,19 +48,34 @@ var email;
 
 async function cognitoSignup(req,res) {
   console.log("reach here cognitoSignup")
+//   let data = {
+//   "client_id": process.env.client_id,
+//   "pool_id":process.env.pool_id,
+//   "fullName":req.body.fullName,
+//   "password": req.body.password,
+//   "username": req.body.username,
+//   "group_name": "edbucket",
+//   "family_name": "edbucket",
+//   "profile": req.body.profile,
+//   "phone_number": `${req.body.countryCode}${req.body.phone}`,//need number with country code,
+//   "domainName":"",
+//   "branding":false
+//   };
+
   let data = {
-  "client_id": process.env.client_id,
-  "pool_id":process.env.pool_id,
-  "fullName":req.body.fullName,
-  "password": req.body.password,
-  "username": req.body.username,
-  "group_name": "edbucket",
-  "family_name": "edbucket",
-  "profile": req.body.profile,
-  "phone_number": `${req.body.countryCode}${req.body.phone}`,//need number with country code,
-  "domainName":"",
-  "branding":false
-  };
+    "client_id": process.env.client_id,
+    "pool_id":process.env.pool_id,
+    // "fullName":req.body.attributes.fullName,
+    "password": req.body.password,
+    "username": req.body.username,
+    // "group_name": "edbucket",
+    // "family_name": "edbucket",
+    "profile": req.body.attributes.profile,
+    // "phone_number": `${req.body.countryCode}${req.body.phone}`,//need number with country code,
+    "phone_number": req.body.attributes.phone_number,//need number with country code,
+    // "domainName":"",
+    // "branding":false
+    };
 
   // const data = {
   //   // client_id: req.body.client_id,
@@ -110,7 +125,7 @@ async function cognitoSignup(req,res) {
 //       'Content-Type': 'application/json'
 //   };
 //   console.log("Request Headers:", headers);
-// console.log("Request Data:", data);
+console.log("Request Data:", data);
   try{
     console.log("Inside try block")
       // const response=await axios.request(config)

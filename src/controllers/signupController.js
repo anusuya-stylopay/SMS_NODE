@@ -9,7 +9,7 @@ const signup = async (req, res) => {
     // if(cognitoSignupResponse.errorCode){
     //     return res.send(cognitoSignupResponse)
     // }
-    return cognitoSignupResponse;
+    // return cognitoSignupResponse;
     if(cognitoSignupResponse.status != 200){
         return res.send("Error in making signup req")
     }
