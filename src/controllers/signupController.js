@@ -6,13 +6,13 @@ const { createContact, createAgent, createCounsellors } = require('../services/z
 const signup = async (req, res) => {
     const datainfo=req.body
     const cognitoSignupResponse = await cognitoSignup(req, res);
-    // if(cognitoSignupResponse.errorCode){
-    //     return res.send(cognitoSignupResponse)
-    // }
-    // return cognitoSignupResponse;
-    if(cognitoSignupResponse.status != 200){
-        return res.send("Error in making signup req")
+    if(cognitoSignupResponse.errorCode){
+        return res.send(cognitoSignupResponse)
     }
+    // return cognitoSignupResponse;
+    // if(cognitoSignupResponse.status != 200){
+    //     return res.send("Error in making signup req")
+    // }
     else if (datainfo.profile=='student'){
         console.log("student here 1")
         const createContactResponse = await createContact(req, res,datainfo);
@@ -34,7 +34,7 @@ const signup = async (req, res) => {
         try{
         const createAgentResponse = await createAgent(req, res,datainfo)
         console.log("createAgentResponse :",createAgentResponse)
-        return res.send(createAgentResponse.data);
+        return res.send(createAgentResponse);
         }
         catch(error){
         // Handle any errors here

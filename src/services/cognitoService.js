@@ -2,6 +2,7 @@ const axios = require("axios");
 const { fetchDNSDataResult } = require("../utils/config");
 const { config } = require("dotenv");
 require("dotenv").config();
+const {logger} = require("../../app"); 
 var email;
 // console.log("fetchDNSDataResult :",fetchDNSDataResult)
 // async function cognitoSignup(req, res) {
@@ -45,7 +46,8 @@ var email;
 //     return false;
 //   }
 // }
-
+// logger.info("This is an info log");
+// logger.error("This is an error log");
 async function cognitoSignup(req,res) {
   console.log("reach here cognitoSignup")
 //   let data = {
@@ -76,6 +78,7 @@ async function cognitoSignup(req,res) {
     // "domainName":"",
     // "branding":false
     };
+   
 
   // const data = {
   //   // client_id: req.body.client_id,
@@ -127,17 +130,22 @@ async function cognitoSignup(req,res) {
 //   console.log("Request Headers:", headers);
 console.log("Request Data:", data);
   try{
+    logger.info({
+        message: "Calling Cognito Signup API",
+        endpoint: "https://gkm943rqh7.execute-api.us-west-2.amazonaws.com/poc/auth/signup",
+        requestData: data,
+      });
     console.log("Inside try block")
       // const response=await axios.request(config)
       const response = await axios.post(
         'https://gkm943rqh7.execute-api.us-west-2.amazonaws.com/poc/auth/signup',
         data,
-        // {
-        //   headers: {
-        //     'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
-        //     'Content-Type': 'application/json'
-        //   }
-        // }
+        {
+          headers: {
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+            'Content-Type': 'application/json'
+          }
+        }
       );
       // const response = await axios.post(
       //   'https://gkm943rqh7.execute-api.us-west-2.amazonaws.com/poc/auth/api/auth/confirm_signup',
@@ -160,16 +168,44 @@ console.log("Request Data:", data);
       //   headers: header,
       //   data: data,
       // });
+      logger.info({
+        message: "Cognito Signup API Success",
+        responseData: response.data,
+      });
       console.log("response" + response)
       console.log("response" + response.data)
       console.log("Signup Successful!");
       return response.data
       }
   catch(error){
-      console.log(error,"signupAPIError")
-      return false
+    if (error.response) {
+        logger.error({
+          message: "Cognito Signup API Error (Response Error)",
+          status: error.response.status,
+          responseData: error.response.data,
+          headers: error.response.headers,
+        });
+      } else if (error.request) {
+        logger.error({
+          message: "Cognito Signup API Error (No Response)",
+          request: error.request,
+        });
+      } else {
+        logger.error({
+          message: "Cognito Signup API Error (Setup Issue)",
+          error: error.message,
+        });
+      }
+    // Ensure only one response is sent and prevent further code execution
+  if (!res.headersSent) {
+    res.status(500).json({ error: "Failed to call Cognito Signup API" });
   }
-}
+
+  // Return false to signal an error occurred
+  return false;
+    }
+  }
+  
 
 // async function cognitoSignup(req, res) {
 //   console.log("reach here cognitoSignup");
