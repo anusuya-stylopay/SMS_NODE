@@ -29,15 +29,18 @@ const getUniversities = async (req, res) => {
 const getFilteredUniversities = async (req, res) => {
     const token = await getToken();
     console.log("token :",token)
-    const apiUrl = 'https://api.sandbox.edbucket.com/crm/api/v1/University/search?criteria=(Country:equals:India)';
+    const apiUrl = 'https://api.sandbox.edbucket.com/crm/api/v1/University/search';
     console.log("universityAPI_URL :",apiUrl)
     const headers = {
         'Authorization': `Zoho-oauthtoken ${token.access_token}`,
-        'User-Agent': 'Mozilla/5.0 Mozilla/5.0 (platform; rv:geckoversion) Gecko/geckotrail Firefox/firefoxversion'
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
     };
+    const { criteria, page } = req.query;
     const params = {
         fields: 'Name,Owner,creatorID,Country,Modified_Time,Requirement,University_Description,Website_Link,Assigned_Counsellor,Course_List',
-         criteria: `(University.id:equals:${data})`
+        criteria,
+        per_page: 15,
+        page
     };
     try {
         const response = await axios.get(apiUrl, { params: params, headers: headers })
