@@ -77,8 +77,9 @@ app.use(
 
 // Routes
 app.use('/api/signup', require('./src/routes/signupRoutes'));
+app.use('/api/otp', require('./src/routes/otpRoutes'));
 // app.use('/api/login',  require('./src/routes/loginRoutes'));
-// app.use('/api/agent', require('./src/routes/agentRoutes'));
+app.use('/api/agent', require('./src/routes/agentRoutes'));
 app.use('/api/university', require('./src/routes/universityRoutes'));
 app.use('/api/course', require('./src/routes/courseRoutes'));
 
