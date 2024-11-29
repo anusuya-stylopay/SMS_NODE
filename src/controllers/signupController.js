@@ -4,6 +4,7 @@ const { cognitoSignup } = require('../services/cognitoService');
 const { createContact, createAgent, createCounsellors } = require('../services/zohoService');
 
 const signup = async (req, res) => {
+    console.log("reach here 1")
     const datainfo=req.body
     const cognitoSignupResponse = await cognitoSignup(req, res);
     if(cognitoSignupResponse.errorCode){

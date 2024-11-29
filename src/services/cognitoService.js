@@ -5,111 +5,24 @@ require("dotenv").config();
 const {logger} = require("../../app"); 
 var email;
 // console.log("fetchDNSDataResult :",fetchDNSDataResult)
-// async function cognitoSignup(req, res) {
-//     console.log("reach here cognitoSignup");
 
-// //   let config = {
-// //     method: "post",
-// //     url: "https://gkm943rqh7.execute-api.us-west-2.amazonaws.com/poc/auth/signup",
-// //     headers: {
-// //       "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
-// //       "Content-Type": "application/json",
-// //     },
-// //     data: data,
-// //   };
-//   const apiUrl = 'https://gkm943rqh7.execute-api.us-west-2.amazonaws.com/poc/auth/signup';
-//   const _headers = {
-//       'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
-//       'Content-Type': 'application/json'
-//   };
-// //   const header = {
-// //     "User-Agent":
-// //       "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
-// //     "Content-Type": "application/json",
-// //   };
-// //   console.log("config :", config);
-// //   email = data["email"];
-//   try {
-//     // const response = await axios.request(config);
-//     const response = await axios.post(apiUrl, data, { headers: _headers })
-//     // const signUpStudent = await axios({
-//     //   method: "POST",
-//     //   url: "https://gkm943rqh7.execute-api.us-west-2.amazonaws.com/poc/auth/signup",
-//     //   headers: header,
-//     //   data: data,
-//     // });
-//     console.log("Signup Successful!");
-//     return response.data;
-//     // return signUpStudent.data;
-//   } catch (error) {
-//     console.log(error, "signupAPIError");
-//     return false;
-//   }
-// }
-// logger.info("This is an info log");
-// logger.error("This is an error log");
 async function cognitoSignup(req,res) {
-  console.log("reach here cognitoSignup")
-//   let data = {
-//   "client_id": process.env.client_id,
-//   "pool_id":process.env.pool_id,
-//   "fullName":req.body.fullName,
-//   "password": req.body.password,
-//   "username": req.body.username,
-//   "group_name": "edbucket",
-//   "family_name": "edbucket",
-//   "profile": req.body.profile,
-//   "phone_number": `${req.body.countryCode}${req.body.phone}`,//need number with country code,
-//   "domainName":"",
-//   "branding":false
-//   };
-
+  console.log("reach here 2")
   let data = {
     "client_id": process.env.client_id,
     "pool_id":process.env.pool_id,
-    // "fullName":req.body.attributes.fullName,
+    "fullName":req.body.fullName,
     "password": req.body.password,
     "username": req.body.username,
-    // "group_name": "edbucket",
-    // "family_name": "edbucket",
-    "profile": req.body.attributes.profile,
-    // "phone_number": `${req.body.countryCode}${req.body.phone}`,//need number with country code,
-    "phone_number": req.body.attributes.phone_number,//need number with country code,
-    // "domainName":"",
-    // "branding":false
+    "group_name": "edbucket",
+    "family_name": "edbucket",
+    "profile": req.body.profile,
+    "phone_number": `${req.body.countryCode}${req.body.phone}`,//need number with country code,
+    "attributes": {},
+    "domainName":"",
+    "branding":false
     };
-   
-
-  // const data = {
-  //   // client_id: req.body.client_id,
-  //   // pool_id: req.body.pool_id,
-  //   // fullName: req.body.fullName,
-  //   // password: req.body.password,
-  //   // email: req.body.username,
-  //   client_id: "5inqugvufsfgj5akuc6qo44n8r",
-  //   pool_id: "us-west-2_jRSM5xLAH",
-  //   username: "aprajita.12@yopmail.com",
-  //   emailOTP:"349296"
-  //   // group_name: "edbucket",
-  //   // family_name: "edbucket",
-  //   // profile: req.body.profile,
-  //   // phone_number: `${req.body.countryCode}${req.body.phone}`, // Need number with country code
-  //   // domainName: "",
-  //   // branding: false,
-  // };
-
-  // const data = {
-  //   "file_key": req.body.file_key,
-  //   "prompt": req.body.prompt,
-  //   "attributes": req.body.attributes
-  // }
-
-
-  // console.log("data :",data)
-   // Convert the object to JSON format
-  //  const jsonData = JSON.stringify(data);
-  //  console.log("jsonData:",  jsonData)
-
+ 
   // let config = {
   // method: 'post',
   // url: 'https://gkm943rqh7.execute-api.us-west-2.amazonaws.com/poc/auth/signup',
@@ -117,7 +30,7 @@ async function cognitoSignup(req,res) {
   //     'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36', 
   //     'Content-Type': 'application/json'
   // },
-  // data : JSON.stringify(data)
+  // data
   // };
   // console.log("config :",config)
   // email=data['email']
@@ -161,13 +74,7 @@ console.log("Request Data:", data);
       console.log("After call the cognito api")
       // const response = await axios.post(apiUrl, data, { headers: _headers });
       // const response = await axios.post(apiUrl, data, { headers });
-      // const response = await axios.post(apiUrl, JSON.stringify(data), { headers });
-      // const signUpStudent = await axios({
-      //   method: "POST",
-      //   url: "https://gkm943rqh7.execute-api.us-west-2.amazonaws.com/poc/auth/signup",
-      //   headers: header,
-      //   data: data,
-      // });
+   
       logger.info({
         message: "Cognito Signup API Success",
         responseData: response.data,
@@ -204,102 +111,7 @@ console.log("Request Data:", data);
   // Return false to signal an error occurred
   return false;
     }
-  }
-  
-
-// async function cognitoSignup(req, res) {
-//   console.log("reach here cognitoSignup");
-
-//   let data = {
-//     "client_id": "5inqugvufsfgj5akuc6qo44n8r",
-//     "pool_id":"us-west-2_jRSM5xLAH",
-//     "email": "aprajita.12@yopmail.com",
-//     "group_name": "edbucket",
-//     "family_name": "edbucket",
-//     "emailOTP": 349296
-//     };
-
-//   try {
-//     console.log("Inside try block");
-
-//     const response = await axios.get(
-//       'http://18.246.85.73:5001/unsubscribe?email=anusuya23789045%40gmail.com',
-//       // data,
-//       // {
-//       //   headers: {
-//       //     'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
-//       //     'Content-Type': 'application/json'
-//       //   }
-//       // }
-//     );
-
-//     console.log("Response:", response); // Inspect the full response object
-//     console.log("Response Data:", response.data); // Inspect the response data
-
-//     if (response && response.data) {
-//       console.log("Signup Successful!");
-//       return response.data;
-//     } else {
-//       console.error("Empty response received from the API.");
-//       return false;
-//     }
-//   } catch (error) {
-//     if (error.response) {
-//       console.error("Error Response Data:", error.response.data);
-//       console.error("Error Status:", error.response.status);
-//       console.error("Error Headers:", error.response.headers);
-//     } else if (error.request) {
-//       console.error("Error Request:", error.request);
-//     } else {
-//       console.error("Error Message:", error.message);
-//     }
-//     return false;
-//   }
-// }
-
-
-
-// async function cognitoSignup(req, res) {
-//   console.log("reach here cognitoSignup");
-  
-//   let data = {
-//     "client_id": process.env.client_id,
-//     "pool_id": process.env.pool_id,
-//     "fullName": req.body.fullName,
-//     "email": req.body.username,
-//     "password": req.body.password,
-//     "group_name": "edbucket",
-//     "family_name": "edbucket",
-//     "profile": req.body.profile,
-//    " phone_number": `${req.body.countryCode}${req.body.phone}`,
-//     "domainName": "",
-//     "branding": false,
-//   };
-
-//   console.log("Data being sent:", data);
-
-//   const apiUrl = 'https://gkm943rqh7.execute-api.us-west-2.amazonaws.com/poc/auth/signup';
-//   const _headers = {
-//     'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
-//     'Content-Type': 'application/json'
-//   };
-
-//   try {
-//     // const response = await axios.post(apiUrl, data, { headers });
-//     const response = await axios({
-//       method: "POST",
-//       url: "https://gkm943rqh7.execute-api.us-west-2.amazonaws.com/poc/auth/signup",
-//       headers: _headers,
-//       data: data,
-//     });
-//     console.log("Signup Successful!", response.data);
-//     res.status(200).json(response.data); // Send success response
-//   } catch (error) {
-//     console.error("Signup API Error:", error.response?.data || error.message);
-//     return false
-//     res.status(500).json({ error: error.response?.data || "Internal Server Error" });
-//   }
-// }
+}
 
 var loginEmail;
 async function cognitoLogin(req, res) {
