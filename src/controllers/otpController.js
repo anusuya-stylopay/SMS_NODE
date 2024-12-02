@@ -9,7 +9,7 @@ const verifyOTP = async (req, res) => {
 
     console.log("cognitoOTPResponse :", cognitoOTPResponse);
     // return res.send(cognitoOTPResponse)
-    if (cognitoOTPResponse.ResponseMetadata.HTTPStatusCode == 200) {
+    if (cognitoOTPResponse.response.ResponseMetadata.HTTPStatusCode == 200) {
       return res.send(cognitoOTPResponse);
     } else {
       return res.status(500).send({ error: cognitoOTPResponse[0] });

@@ -2,9 +2,10 @@ const { cognitoLogin } = require('../services/cognitoService');
 const { zohoLogin } = require('../services/zohoService');
  
 const login = async (req, res) => {
-    try {const cognitoLoginResponse = await cognitoLogin(req, res);
+    try {
+        const cognitoLoginResponse = await cognitoLogin(req, res);
         console.log("cognitoLoginResponse",cognitoLoginResponse)
-    if (!cognitoLoginResponse?.errorCode) {
+    if (!cognitoLoginResponse?.errorCode && cognitoLoginResponse) {
         const zohoLoginResponse = await zohoLogin(req, res, cognitoLoginResponse);
         console.log("zohoLoginResponse :", zohoLoginResponse)
         if (zohoLoginResponse?.error) {
@@ -20,7 +21,7 @@ const login = async (req, res) => {
         }
     }
     else {
-        console.log("18-12-2023-cognitoLoginResponse :",cognitoLoginResponse)
+        console.log("cognitoLoginResponse :",cognitoLoginResponse)
         res.status(200).send(cognitoLoginResponse)
     }
 }catch (error) {

@@ -11,16 +11,17 @@ async function cognitoSignup(req,res) {
   let data = {
     "client_id": process.env.client_id,
     "pool_id":process.env.pool_id,
-    "fullName":req.body.fullName,
     "password": req.body.password,
     "username": req.body.username,
+    "fullName":req.body.fullName,
+    "attributes": {
+      "profile": req.body.profile,
+      "phone_number": `${req.body.countryCode}${req.body.phone}`,//need number with country code,
+    },
     "group_name": "edbucket",
-    "family_name": "edbucket",
-    "profile": req.body.profile,
-    "phone_number": `${req.body.countryCode}${req.body.phone}`,//need number with country code,
-    "attributes": {},
-    "domainName":"",
-    "branding":false
+      "family_name": "edbucket",
+      "domainName":"",
+      "branding":false
     };
 
 console.log("Request Data:", data);
@@ -163,65 +164,69 @@ async function cognitoResendOTP(req, res) {
 }
 
 // var loginEmail;
-// async function cognitoLogin(req, res) {
-//     var userInfo;
-//     let data = {
-//     "pool_id":process.env.pool_id,
-//     "email": req.body.email,
-//     "password": req.body.password,
-//     "group_name": "edbucket",
-//     "profile": req.body.profile
-//     };
-//     console.log("data :",data)
+async function cognitoLogin(req, res) {
+    var userInfo;
+    let data = {
+    "client_id": process.env.client_id,
+    "pool_id":process.env.pool_id,
+    "username": req.body.username,
+    "password": req.body.password,
+    "group_name": "edbucket",
+    "profile": req.body.profile
+    };
+    console.log("data :",data)
 
-//     let config = {
-//     method: 'post',
-//     url: `${(res.fetchDNSDataResult).baseUrl}/auth/api/v1/adm_get_user`,
-//     headers: { 
-//         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36', 
-//         'Content-Type': 'application/json'
-//     },
-//     data : data
-//     };
-//     try{
-//         const response=await axios.request(config)
-//         userInfo=response.data
-//         const actualRole = response.data.UserAttributes.find(attr => attr.Name === "custom:profile").Value;
-//         if (response.data.UserAttributes.find(attr => attr.Name === "custom:profile").Value == data["profile"]) {
-//             const apiUrl = `${(res.fetchDNSDataResult).baseUrl}/auth/api/v1/signin`;
-//             const requestBody = {
-//                 "client_id": process.env.client_id,
-//                 "pool_id":process.env.pool_id,
-//                 "email":req.body.email,
-//                 "password":req.body.password,
-//                 "group_name":"edbucket",
-//                 "profile":req.body.profile 
-//             }
-//             const headers = {
-//                 'User-Agent': 'Mozilla/5.0 Mozilla/5.0 (platform; rv:geckoversion) Gecko/geckotrail Firefox/firefoxversion', 
-//                 'Content-Type': 'application/json'
-//             };
-//             try {
-//                 const response = await axios.post(apiUrl, requestBody,{headers:headers})
-//                 response.data.email = requestBody["email"]
-//                 response.data.profile = requestBody["profile"]
-//                 response.data.userInfo=userInfo
-//                 return response.data
-//             } catch (error) {
-//                 return false;
-//             }
-//         }
-//         else {
-//             console.log(`vaild :false,reason:your are ${actualRole} please don't try to login with ${req.body.profile}`)
-//             return { errorCode: 'NotAuthorizedException',msg: ':Please check your login email and password.'}
-//         }
-//     }catch(error){
-//         if(error.response.data.error=="USER_NOT_FOUND"){
-//             return { errorCode: 'NotAuthorized',msg: " :Please Provide vaild Credentials"}
-//         }
-//         console.log(error);
-//         return ("false")
-//     }
-// }
+    let config = {
+    method: 'post',
+    url: 'https://gkm943rqh7.execute-api.us-west-2.amazonaws.com/poc/auth/adm_get_user',
+    headers: { 
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36', 
+        'Content-Type': 'application/json'
+    },
+    data : data
+    };
+    try{
+        const response=await axios.request(config)
+        console.log(response)
+        userInfo=response.data
+        console.log(JSON.stringify(response.data.UserAttributes))
+        const actualRole = response.data.UserAttributes.find(attr => attr.Name === "profile").Value;
+        if (response.data.UserAttributes.find(attr => attr.Name === "profile").Value == data["profile"]) {
+            const apiUrl = 'https://gkm943rqh7.execute-api.us-west-2.amazonaws.com/poc/auth/signin';
+            const requestBody = {
+                "client_id": process.env.client_id,
+                "pool_id":process.env.pool_id,
+                "username":req.body.username,
+                "password":req.body.password,
+                "group_name":"edbucket",
+                "profile":req.body.profile 
+            }
+            const headers = {
+                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36', 
+                'Content-Type': 'application/json'
+            };
+            try {
+                const response = await axios.post(apiUrl, requestBody,{headers:headers})
+                response.data.username = requestBody["username"]
+                response.data.profile = requestBody["profile"]
+                response.data.userInfo=userInfo
+                return response.data
+            } catch (error) {
+                return false;
+            }
+        }
+        else {
+            console.log(`vaild :false,reason:your are ${actualRole} please don't try to login with ${req.body.profile}`)
+            return { errorCode: 'NotAuthorizedException',msg: ':Please check your login email and password.'}
+        }
+    }catch(error){
+      console.log(error)
+        // if(error.response.error=="USER_NOT_FOUND"){
+        //     return { errorCode: 'NotAuthorized',msg: " :Please Provide vaild Credentials"}
+        // }
+        // console.log(error);
+        return false
+    }
+}
 
-module.exports = { cognitoSignup, cognitoVerifyOTP, cognitoResendOTP };
+module.exports = { cognitoSignup, cognitoVerifyOTP, cognitoResendOTP, cognitoLogin };
