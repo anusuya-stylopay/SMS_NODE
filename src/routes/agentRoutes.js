@@ -3,7 +3,7 @@ const router = express.Router();
 const agentController = require('../controllers/agentController');
 
 router.get('/list', agentController.getAgents);
-// router.get('/student-list', agentController.getAgentStudentsList);
+router.get('/student-list', agentController.getAgentStudentsList);
 // router.get('/application-list', agentController.getAgentApplicationList);
 // router.post('/create/student',agentController.createStudentByAgent);
 // router.put('/student/details/:id',agentController.updateAgentStudentDetails);

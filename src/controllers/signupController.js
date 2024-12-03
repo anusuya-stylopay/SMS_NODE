@@ -44,13 +44,16 @@ const signup = async (req, res) => {
         };
     }
     else if (datainfo.profile=='counsellor'){
-        const createCounsellorResponse = await createCounsellors(req, res,datainfo).then((response) => {
-            res.send(response.data);
-          }).catch((error) => {
+        try{
+            const createCounsellorResponse = await createCounsellors(req, res,datainfo)
+            console.log("createCounsellors :",createCounsellors)
+            return res.send(createCounsellors.data);
+            }
+            catch(error){
             // Handle any errors here
             console.error('Request failed:', error);
-            res.status(error.response ? error.response.status : 500).send(error.message);
-          });
+            return res.status(error.response ? error.response.status : 500).send(error.message);
+            };
     }
 };
   
