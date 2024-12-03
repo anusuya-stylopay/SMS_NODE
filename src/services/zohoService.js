@@ -15,13 +15,14 @@ const { fetchDNSDataResult } = require('../utils/config');
 
 // }
 
+// create Students
 async function createContact(req, res,datainfo) {
     console.log("reavh here createContact ")
     console.log("Contact datainfo :",datainfo)
     const token = await getToken();
     const apiUrl = 'https://api.sandbox.edbucket.com/crm/api/v1/Contacts';
     const _headers = {
-        'Authorization': `Zoho-oauthtoken ${token}`,
+        'Authorization': `Zoho-oauthtoken ${token.access_token}`,
         'Content-Type': 'application/json',
         'User-Agent': 'Mozilla/5.0 Mozilla/5.0 (platform; rv:geckoversion) Gecko/geckotrail Firefox/firefoxversion'
     };
@@ -60,67 +61,7 @@ async function createContact(req, res,datainfo) {
 
 }
 
-// async function createAgent(req, res,datainfo) {
-//     const token = await getToken();
-//     const access_token = token.access_token;
-//     console.log("token" + token.access_token);
-//     const request_Body = {
-//         "data": [
-//             {
-//                 "Vendor_Name":datainfo.fullName,
-//                 "First_Name": datainfo.fullName.split(" ").length < 2 ? datainfo.fullName : datainfo.fullName.substring(0,datainfo.fullName.lastIndexOf(" ")),
-//                 "Last_Name": datainfo.fullName.split(" ").length < 2 ? "" : datainfo.fullName.split(" ").pop(),
-//                 "Email": datainfo.username,
-//                 "Phone": datainfo.phone,
-//                 "ISD_Code":datainfo.countryCode
-//             }
-//         ]
-//     };
-//     // let config = {
-//     //     method: 'POST',
-//     //     url: 'https://api.sandbox.edbucket.com/crm/api/v1/Vendors',
-//     //     headers: { 
-//     //         'Authorization': `Zoho-oauthtoken ${token}`,
-//     //         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36', 
-//     //         'Content-Type': 'application/json'
-//     //     },
-//     //    data: request_Body
-//     //     };
- 
-//     const apiUrl = 'https://api.sandbox.edbucket.com/crm/api/v1/Vendors';
-//     const _headers = {
-//         'Authorization': `Zoho-oauthtoken ${token.access_token}`,
-//         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
-//         'Content-Type': 'application/json'
-//     };
-   
-//     try {
-//         const response = await axios.post(apiUrl, request_Body, { headers: _headers })
-//         // const response = await axios.request(config)
-//         // const response = await axios({
-//         //     method: "POST",
-//         //     url: "https://api.sandbox.edbucket.com/crm/api/v1/Vendors",
-//         //     headers: _headers,
-//         //     data: request_Body
-//         //   });
-//         return response.data;
-//     } catch (error) {
-//         console.log("Error :",error)
-//         console.log("errorContactCreate :",error.response.data.code)
-//         if(error.response.data.code=='DOMAIN_TOKEN_MISMATCH'){
-//             return res.send({ errorCode: 'NotAuthorized',msg: " :Contact to the admin" })
-//         }
-//         else if(error.response.data.data[0].code=="DUPLICATE_DATA"){
-//             console.log(true)
-//             return res.send({ errorCode: 'NotAuthorized',msg: " :Email Id is already exist" })
-//         }
-//         else{
-//             console.log(false)
-//             return res.status(error.response ? error.response.status : 500).send(error.message);
-//         }
-//     }
-// }
-
+// create Agnets
 async function createAgent(req, res, datainfo) {
     const token = await getToken();
     // const access_token = token.access_token;
@@ -133,8 +74,8 @@ async function createAgent(req, res, datainfo) {
                 "First_Name": datainfo.fullName.split(" ").length < 2 ? datainfo.fullName : datainfo.fullName.substring(0, datainfo.fullName.lastIndexOf(" ")),
                 "Last_Name": datainfo.fullName.split(" ").length < 2 ? "" : datainfo.fullName.split(" ").pop(),
                 "Email": datainfo.username,
-                "Phone": datainfo.attributes.phone,
-                "ISD_Code": datainfo.attributes.countryCode
+                "Phone": datainfo.phone,
+                "ISD_Code": datainfo.countryCode
             }
         ]
     };
@@ -226,30 +167,31 @@ async function zohoLogin(req, res,cognitoLoginResponse) {
     };
     try {
         const response = await axios.get(apiUrl, { params, headers: headers })
-        console.log(response)
-        return response
-        // if(response.data)
-        // {
-        // // console.log("zohologinData :",response.data.data[0])
-        // // response.data.data[0].accesstoken=cognitoLoginResponse.response.AuthenticationResult.AccessToken
-        // // response.data.data[0].profile=cognitoLoginResponse.profile
-        // // response.data.data[0].userInfo=cognitoLoginResponse.userInfo
-        // return response.data
-        // }
-        // else
-        // {
-        //     return {
-        //         error:"No data present here,please contact to the admin"
-        //     }
-        // }
+        // console.log(response)
+        if(response.data)
+        {
+        console.log("zohologinData :",response.data.data[0])
+        response.data.data[0].accesstoken=cognitoLoginResponse.response.AuthenticationResult.AccessToken
+        response.data.data[0].profile=cognitoLoginResponse.profile
+        response.data.data[0].userInfo=cognitoLoginResponse.userInfo
+        return response.data
+        }
+        else
+        {
+            return {
+                error:"No data present here,please contact to the admin"
+            }
+        }
     } catch (error) {
         return { error: error.message };
     };
-}else if(cognitoLoginResponse.profile=="agent"){
+}
+else if(cognitoLoginResponse.profile=="agent"){
     const apiUrl = 'https://api.sandbox.edbucket.com/crm/api/v1/Vendors/search';
     const headers = {
         'Authorization': `Zoho-oauthtoken ${token.access_token}`,
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+        'Content-Type': 'application/json'
     };
     const params = {
         fields: 'First_Name,Last_Name,Date_of_Birth,Gender,ISD_Code,Phone,Nationality,Vendor_Name,Email,Assigned_Counsellor,Street_Address,Street_Address_Line_2,Mailing_Zip,Mailing_State,Mailing_Country,Mailing_City',
@@ -259,11 +201,11 @@ async function zohoLogin(req, res,cognitoLoginResponse) {
         const response = await axios.get(apiUrl, { params, headers: headers })
         console.log("zohologin :",response)
         console.log("zohologinData :",response.data)
-        // response.data.accesstoken=cognitoLoginResponse.AuthenticationResult.AccessToken
-        // response.data.profile=cognitoLoginResponse.profile
-        // response.data.data.userInfo=cognitoLoginResponse.userInfo
-        return response;
-        // return response.data
+        response.data.data[0].accesstoken=cognitoLoginResponse.response.AuthenticationResult.AccessToken
+        response.data.data[0].profile=cognitoLoginResponse.profile
+        response.data.data[0].userInfo=cognitoLoginResponse.userInfo
+        // return response;
+        return response.data
     } catch (error) {
         return { error: error.message };
     };
