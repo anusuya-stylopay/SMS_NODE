@@ -3,8 +3,6 @@ const { fetchDNSDataResult } = require("../utils/config");
 const { config } = require("dotenv");
 require("dotenv").config();
 const {logger} = require("../../app"); 
-var email;
-// console.log("fetchDNSDataResult :",fetchDNSDataResult)
 
 async function cognitoSignup(req,res) {
   console.log("reach here 2")
@@ -163,7 +161,6 @@ async function cognitoResendOTP(req, res) {
   };
 }
 
-// var loginEmail;
 async function cognitoLogin(req, res) {
     var userInfo;
     let data = {
@@ -229,4 +226,58 @@ async function cognitoLogin(req, res) {
     }
 }
 
-module.exports = { cognitoSignup, cognitoVerifyOTP, cognitoResendOTP, cognitoLogin };
+async function cognitoForgetPassword(req,res){
+    let data = {
+    "client_id": process.env.client_id,
+    "pool_id":process.env.pool_id,
+    "username": req.body.username,
+    };
+    
+    let config = {
+      method: 'post',
+      url: 'https://gkm943rqh7.execute-api.us-west-2.amazonaws.com/poc/auth/forget_password',
+      headers: { 
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36', 
+        'Content-Type': 'application/json'
+      },
+      data : data
+    };
+    try{
+    const response=await axios.request(config)
+    return response.data
+    }
+    catch(error){
+      console.log(error);
+      return { "error": error.message }
+    };
+}
+
+async function cognitoConfirmForgetPassword(req,res){
+    let data = {
+    "client_id": process.env.client_id,
+    "pool_id":process.env.pool_id,
+    "username": req.body.username,
+    "newPassword": req.body.newPassword,
+    "code": req.body.code
+    };
+
+    let config = {
+    method: 'post',
+    url: 'https://gkm943rqh7.execute-api.us-west-2.amazonaws.com/poc/auth/confirm_forget_password',
+    headers: { 
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36', 
+        'Content-Type': 'application/json'
+    },
+    data : data
+    };
+
+    try{
+    const response = await axios.request(config)
+    console.log(JSON.stringify(response.data));
+    return response.data
+    }catch(error){
+    console.log(error);
+    return error
+    };
+}
+module.exports = { cognitoSignup, cognitoVerifyOTP, cognitoResendOTP, cognitoLogin, cognitoForgetPassword, cognitoConfirmForgetPassword };
