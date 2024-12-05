@@ -24,16 +24,16 @@ async function createContact(req, res,datainfo) {
     const _headers = {
         'Authorization': `Zoho-oauthtoken ${token.access_token}`,
         'Content-Type': 'application/json',
-        'User-Agent': 'Mozilla/5.0 Mozilla/5.0 (platform; rv:geckoversion) Gecko/geckotrail Firefox/firefoxversion'
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
     };
     const request_Body = {
         "data": [
             {
                 "First_Name": datainfo.fullName.split(" ").length < 2 ? datainfo.fullName : datainfo.fullName.substring(0, datainfo.fullName.lastIndexOf(" ")),
                 "Last_Name": datainfo.fullName.split(" ").length < 2 ? "" : datainfo.fullName.split(" ").pop(),
-                "Email": datainfo.email,
+                "Email": datainfo.username,
                 "Phone": datainfo.phone,
-                "ISD_Code":datainfo.ISD_Code
+                "ISD_Code":datainfo.countryCode
             }
         ]
     };
@@ -125,10 +125,10 @@ async function createCounsellors(req, res,datainfo) {
 
     const token = await getToken();
  
-    const apiUrl = `${(res.fetchDNSDataResult).baseUrl}/crm/api/v1/Counsellors`;
+    const apiUrl = 'https://api.sandbox.edbucket.com/crm/api/v1/Counsellors';
     const _headers = {
-        'Authorization': `Zoho-oauthtoken ${token}`,
-        'User-Agent': 'Mozilla/5.0 Mozilla/5.0 (platform; rv:geckoversion) Gecko/geckotrail Firefox/firefoxversion'
+        'Authorization': `Zoho-oauthtoken ${token.access_token}`,
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
     };
     const request_Body = {
         "data": [
@@ -136,8 +136,9 @@ async function createCounsellors(req, res,datainfo) {
                 "Name":datainfo.fullName,
                 "First_Name": datainfo.fullName.split(" ").length < 2 ? datainfo.fullName : datainfo.fullName.substring(0, datainfo.fullName.lastIndexOf(" ")),
                 "Last_Name": datainfo.fullName.split(" ").length < 2 ? "" : datainfo.fullName.split(" ").pop(),
-                "Email": datainfo.email,
-                "Phone": datainfo.phone
+                "Email": datainfo.username,
+                "Phone": datainfo.phone,
+                "ISD_Code":datainfo.countryCode
             }
         ]
     };

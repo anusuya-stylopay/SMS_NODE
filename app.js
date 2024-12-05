@@ -19,7 +19,15 @@ const logger = createLogger({
     format.json()
   ),
   transports: [
-    new transports.Console()
+    new transports.Console(),
+    new transports.File({ 
+      filename: "logs/combined.log", // Log file for all logs
+      level: "info",                // Logs messages with level 'info' and below
+    }),
+    new transports.File({ 
+      filename: "logs/error.log",   // Log file for error logs
+      level: "error",              // Logs only 'error' level messages
+    }),
   ],
 });
 module.exports = {app, logger};
