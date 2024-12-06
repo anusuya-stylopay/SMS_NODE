@@ -312,32 +312,36 @@ async function cognitoAdminCreateUser(req, res){
 }
 
 
-async function cognitoResendPassword(req, res){
+async function cognitoResendPassword(req, res, datainfo) {
   let data = {
-    "client_id": process.env.client_id,
-    "pool_id":process.env.pool_id,
-    "username": datainfo.username,
+      "client_id": process.env.client_id,
+      "pool_id": process.env.pool_id,
+      "username": datainfo.username,
   };
 
-    let config = {
-      method: 'post',
-      url: 'https://gkm943rqh7.execute-api.us-west-2.amazonaws.com/poc/auth/resend_password_admin_create_user',
-      headers: { 
-          'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36', 
-          'Content-Type': 'application/json'
-      },
-      data : data
-      };
+  console.log("Request Data:", JSON.stringify(data)); // Debugging data
 
-      try{
-        const response = await axios.request(config)
-        console.log(JSON.stringify(response.data));
-        return response.data
-        }catch(error){
-        console.log(error);
-        return error
-        };
+  let config = {
+      method: 'post',
+      url: 'https://gkm943rqh7.execute-api.us-west-2.amazonaws.com/poc/auth/resend_password_adm_create_user',
+      headers: {
+          'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+          'Content-Type': 'application/json',
+      },
+      data: data,
+  };
+
+  try {
+      const response = await axios.request(config);
+      console.log("API Response:", response.data);
+      return response.data;
+  } catch (error) {
+      console.error("API Error:", error.response?.data || error.message);
+      throw error.response?.data || error; // Propagate the error to handle it in `resendPassword`
+  }
 }
+
+
 
 
 module.exports = { cognitoSignup, cognitoVerifyOTP, cognitoResendOTP, cognitoLogin, cognitoForgetPassword, cognitoConfirmForgetPassword, cognitoAdminCreateUser, cognitoResendPassword};

@@ -217,28 +217,23 @@ const createUserByAgent = async (req, res) => {
 };
 
 const resendPassword = async (req, res) => {
-    console.log("reach here")
+    console.log("Reached resendPassword endpoint");
+
     if (!req.session.userData) {
-        return res.status(401).send({ "error": "Login Required" })
+        return res.status(401).send({ error: "Login Required" });
     }
-    const datainfo=req.body
-    const resendPasswordResponse = await cognitoResendPassword(req, res, datainfo);
-    if(resendPasswordResponse.errorCode){
-        return res.send(resendPasswordResponse)
-    }else{
-        console.log(resendPasswordResponse)
-        res.status(200).send(resendPasswordResponse)
-    }
-   
-    
+
+    const datainfo = req.body;
+
     try {
-        console.log("reach here 2")
-        const response = await axios.get(apiUrl, { params: params, headers: headers })
-        console.log("response" + response)
-        res.send(response.data);
+        const resendPasswordResponse = await cognitoResendPassword(req, res, datainfo);
+        console.log("Success Response:", resendPasswordResponse);
+        return res.status(200).send(resendPasswordResponse);
     } catch (error) {
-        res.status(error.response ? error.response.status : 500).send(error.message);
+        console.error("Error Response:", error);
+        return res.status(error.statusCode || 500).send(error);
     }
-}
+};
+
 
 module.exports = { getAgents, getAgentStudentsList, getAgentUniversityList, getAgentCourseList, getAgentApplicationList, getAgentAllCounsellorList, createUserByAgent, resendPassword};
