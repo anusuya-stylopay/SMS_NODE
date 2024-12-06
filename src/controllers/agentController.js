@@ -1,5 +1,7 @@
 const { default: axios } = require('axios');
 const { getToken } = require('../services/authService');
+const { cognitoAdminCreateUser, cognitoResendPassword } = require('../services/cognitoService');
+const { createContact, createCounsellors, } = require('../services/zohoService');
 // const { loginRequired } = require('../utils/config');
 // const { fetchDNSDataResult} = require('../utils/config');
 
@@ -169,4 +171,74 @@ const getAgentAllCounsellorList = async (req, res) => {
     }
 }
 
-module.exports = { getAgents, getAgentStudentsList, getAgentUniversityList, getAgentCourseList, getAgentApplicationList, getAgentAllCounsellorList};
+const createUserByAgent = async (req, res) => {
+    console.log("reach here 1")
+    if (!req.session.userData) {
+        return res.status(401).send({ "error": "Login Required" })
+    }
+    const datainfo=req.body
+    const cognitoCreateUserResponse = await cognitoAdminCreateUser(req, res);
+    if(cognitoCreateUserResponse.errorCode){
+        return res.send(cognitoCreateUserResponse)
+    }
+    // return cognitoSignupResponse;
+    // if(cognitoSignupResponse.status != 200){
+    //     return res.send("Error in making signup req")
+    // }
+    if (datainfo.profile=='student'){
+        console.log("student here 1")
+        const createContactResponse = await createContact(req, res,datainfo);
+        console.log("createContactResponse :",createContactResponse)
+        if(createContactResponse.errorCode){
+            console.log("student here 2")
+            console.log("ErrorcreateContactResponse",createContactResponse)
+            return res.status(200).send(createContactResponse)
+        }
+        if (createContactResponse.data[0].code==='SUCCESS'){
+            console.log("student here 3")
+            return res.send(createContactResponse);
+        } else{
+            console.log("student here 4")
+            return res.status(500).send("contact API Failed");
+        }
+    }
+    else if (datainfo.profile=='counsellor'){
+        try{
+            const createCounsellorResponse = await createCounsellors(req, res,datainfo)
+            console.log("createCounsellorResponse :",createCounsellorResponse)
+            return res.status(200).send(createCounsellorResponse.data);
+            }
+            catch(error){
+            // Handle any errors here
+            console.error('Request failed:', error);
+            return res.status(error.response ? error.response.status : 500).send(error.message);
+            };
+    }
+};
+
+const resendPassword = async (req, res) => {
+    console.log("reach here")
+    if (!req.session.userData) {
+        return res.status(401).send({ "error": "Login Required" })
+    }
+    const datainfo=req.body
+    const resendPasswordResponse = await cognitoResendPassword(req, res, datainfo);
+    if(resendPasswordResponse.errorCode){
+        return res.send(resendPasswordResponse)
+    }else{
+        console.log(resendPasswordResponse)
+        res.status(200).send(resendPasswordResponse)
+    }
+   
+    
+    try {
+        console.log("reach here 2")
+        const response = await axios.get(apiUrl, { params: params, headers: headers })
+        console.log("response" + response)
+        res.send(response.data);
+    } catch (error) {
+        res.status(error.response ? error.response.status : 500).send(error.message);
+    }
+}
+
+module.exports = { getAgents, getAgentStudentsList, getAgentUniversityList, getAgentCourseList, getAgentApplicationList, getAgentAllCounsellorList, createUserByAgent, resendPassword};

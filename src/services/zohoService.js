@@ -17,7 +17,7 @@ const { fetchDNSDataResult } = require('../utils/config');
 
 // create Students
 async function createContact(req, res,datainfo) {
-    console.log("reavh here createContact ")
+    console.log("reach here createContact ")
     console.log("Contact datainfo :",datainfo)
     const token = await getToken();
     const apiUrl = 'https://api.sandbox.edbucket.com/crm/api/v1/Contacts';

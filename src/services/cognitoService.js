@@ -280,4 +280,64 @@ async function cognitoConfirmForgetPassword(req,res){
     return error
     };
 }
-module.exports = { cognitoSignup, cognitoVerifyOTP, cognitoResendOTP, cognitoLogin, cognitoForgetPassword, cognitoConfirmForgetPassword };
+
+async function cognitoAdminCreateUser(req, res){
+  let data = {
+    "client_id": process.env.client_id,
+    "pool_id":process.env.pool_id,
+    "username": req.body.username,
+    "attributes": {
+      "profile": req.body.profile
+  }
+    };
+
+    let config = {
+      method: 'post',
+      url: 'https://gkm943rqh7.execute-api.us-west-2.amazonaws.com/poc/auth/adm_create_user',
+      headers: { 
+          'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36', 
+          'Content-Type': 'application/json'
+      },
+      data : data
+      };
+
+      try{
+        const response = await axios.request(config)
+        console.log(JSON.stringify(response.data));
+        return response.data
+        }catch(error){
+        console.log(error);
+        return error
+        };
+}
+
+
+async function cognitoResendPassword(req, res){
+  let data = {
+    "client_id": process.env.client_id,
+    "pool_id":process.env.pool_id,
+    "username": datainfo.username,
+  };
+
+    let config = {
+      method: 'post',
+      url: 'https://gkm943rqh7.execute-api.us-west-2.amazonaws.com/poc/auth/resend_password_admin_create_user',
+      headers: { 
+          'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36', 
+          'Content-Type': 'application/json'
+      },
+      data : data
+      };
+
+      try{
+        const response = await axios.request(config)
+        console.log(JSON.stringify(response.data));
+        return response.data
+        }catch(error){
+        console.log(error);
+        return error
+        };
+}
+
+
+module.exports = { cognitoSignup, cognitoVerifyOTP, cognitoResendOTP, cognitoLogin, cognitoForgetPassword, cognitoConfirmForgetPassword, cognitoAdminCreateUser, cognitoResendPassword};
