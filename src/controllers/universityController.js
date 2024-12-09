@@ -1,14 +1,9 @@
 const { default: axios } = require('axios');
 const { getToken } = require('../services/authService');
 const { base_url } = require('../utils/config');
-// const { fetchDNSDataResult} = require('../utils/config');
-// setTimeout(async()=>{console.log("fetchDNSDataResult3",await fetchDNSDataResult)})
 
 const getUniversities = async (req, res) => {
     const token = await getToken();
-    // const access_token = token.access_token;
-    // console.log("token" + token.access_token);
-    // console.log("token :",token)
     const apiUrl = 'https://api.sandbox.edbucket.com/crm/api/v1/University';
     console.log("universityAPI_URL :",apiUrl)
     const headers = {

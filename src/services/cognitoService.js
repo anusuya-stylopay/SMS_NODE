@@ -1,5 +1,4 @@
 const axios = require("axios");
-const { fetchDNSDataResult } = require("../utils/config");
 const { config } = require("dotenv");
 require("dotenv").config();
 const {logger} = require("../../app"); 
@@ -340,8 +339,5 @@ async function cognitoResendPassword(req, res, datainfo) {
       throw error.response?.data || error; // Propagate the error to handle it in `resendPassword`
   }
 }
-
-
-
 
 module.exports = { cognitoSignup, cognitoVerifyOTP, cognitoResendOTP, cognitoLogin, cognitoForgetPassword, cognitoConfirmForgetPassword, cognitoAdminCreateUser, cognitoResendPassword};

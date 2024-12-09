@@ -2,10 +2,6 @@ const { default: axios } = require('axios');
 const { getToken } = require('../services/authService');
 const { cognitoAdminCreateUser, cognitoResendPassword } = require('../services/cognitoService');
 const { createContact, createCounsellors, } = require('../services/zohoService');
-// const { loginRequired } = require('../utils/config');
-// const { fetchDNSDataResult} = require('../utils/config');
-
-// setTimeout(async()=>{console.log("fetchDNSDataResult2",await fetchDNSDataResult)})
 
 const getAgents = async (req, res) => {
     // if (loginRequired(req, res)) {

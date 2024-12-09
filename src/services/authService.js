@@ -11,7 +11,6 @@ async function getToken() {
             'Content-Type': 'application/json'
         }
         };
-    // const apiUrl ="https://api.sandbox.edbucket.com/crm/api/v1/oauth/get_token?provider=zoho&environment=sandbox"
 
     try {
         // const response = await axios.get(apiUrl)

@@ -15,7 +15,6 @@ const forgotPassword=async (req,res)=>{
 const confirmForgotPassword=async(req,res)=>{
     try {
         console.log("reach here cognitoConfirmForgetPassword")
-        // console.log("cognitoConfirmForgetPassword :",cognitoConfirmForgetPassword)
         const cognitoConfirmForgetPasswordResponse = await cognitoConfirmForgetPassword(req, res)
         console.log("cognitoConfirmForgetPasswordResponse :",cognitoConfirmForgetPasswordResponse)
         return res.send(cognitoConfirmForgetPasswordResponse)
@@ -23,7 +22,6 @@ const confirmForgotPassword=async(req,res)=>{
         console.error('API Error:', error);
         return res.send(error)
     }
-
 }
 
 module.exports = { forgotPassword,confirmForgotPassword }

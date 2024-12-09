@@ -1,19 +1,6 @@
 const axios = require('axios');
 const { base_url } = require('../utils/config');
 const { getToken } = require('./authService');
-const { fetchDNSDataResult } = require('../utils/config');
-
-// const getToken=async()=>{
-//     const apiUrl ="http://localhost:5000/api/token/get"
-//     try {
-//         const response = await axios.post(apiUrl)
-//         return response.data
-//         // return response.data.data[0].code === "SUCCESS";
-//     } catch (err) {
-//         return err
-//     }
-
-// }
 
 // create Students
 async function createContact(req, res,datainfo) {

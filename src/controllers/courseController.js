@@ -1,6 +1,5 @@
 const { default: axios } = require('axios');
 const { getToken } = require('../services/authService');
-const { fetchDNSDataResult} = require('../utils/config');
 
 const getCourse = async (req, res) => {
     const token = await getToken();
